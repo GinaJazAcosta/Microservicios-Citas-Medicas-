@@ -21,8 +21,8 @@ public record PacienteRequest (
         Short edad,
 
         @NotNull(message="El peso es requerido")
-        @DecimalMin(value="1.0", message="El peso mínima es 1 Kg")
-        @DecimalMax(value="200.0", message="El peso máxima es 200 Kg")
+        @DecimalMin(value="0.1", message="El peso mínima es 0.1 Kg")
+        @DecimalMax(value="200.0", message="El peso máxima es 200.0 Kg")
         Double peso,
 
         @NotNull(message="La estatura es requerida")

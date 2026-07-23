@@ -97,7 +97,7 @@ public class Paciente {
                 "La dirección es requerida y debe tener entre 1 y 150 caracteres");
         ValoresUnicosUtils.validarRangoShort(edad, (short) 1, (short) 100,
                 "La edad es requerida debe de estar en un rango de 1 a 100 años");
-        ValoresUnicosUtils.validarRangoDouble(peso, 1.0, 200.0,
+        ValoresUnicosUtils.validarRangoDouble(peso, 0.1, 200.0,
                 "El peso es requerido debe de estar en un rango de 1 a 200 Kg");
         ValoresUnicosUtils.validarRangoDouble(estatura, 1.0, 2.0,
                 "La estatura es requerida debe de estar en un rango de 1 a 2 metros");

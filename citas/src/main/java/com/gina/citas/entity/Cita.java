@@ -71,7 +71,7 @@ public class Cita {
             throw new IllegalArgumentException("El nuevo estado de la cita es requerido");
         if (!this.estadoCita.puedeCambiarA(nuevoEstado))
             throw new IllegalArgumentException("La cita con estado: " + this.estadoCita +
-                    " solo puede cambiar a " +this.estadoCita.puedeCambiar());
+                    "  solo puede cambiar a " +this.estadoCita.puedeCambiar());
         this.estadoCita = nuevoEstado;
     }
 
@@ -102,7 +102,7 @@ public class Cita {
     private void validarActualizacionPermitida(){
         validarNoEliminado();
         if (!this.estadoCita.isActualizable()){
-            throw  new IllegalArgumentException("La cita con estado " + this.estadoCita + "no puede actualizarse");
+            throw  new IllegalArgumentException("La cita con estado " + this.estadoCita + " no puede actualizarse");
         }
     }
 
