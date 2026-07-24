@@ -1,5 +1,6 @@
 package com.gina.medicos.service;
 
+import com.gina.common.clients.CitaCliente;
 import com.gina.common.dto.medico.MedicoRequest;
 import com.gina.common.dto.medico.MedicoResponse;
 import com.gina.common.enums.DisponibilidadMedico;
@@ -22,8 +23,11 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class MedicoServiceImpl implements MedicoService {
+
     private final MedicoRepository medicoRepository;
     private final MedicoMapper medicoMapper;
+
+    private final CitaCliente citaCliente;
 
     @Override //LISTAR MEDICOS ACTIVOS (GET /)
     @Transactional(readOnly = true)
@@ -64,7 +68,7 @@ public class MedicoServiceImpl implements MedicoService {
     @Override //ACTUALIZAR MEDICO (PUT /{id})
     public MedicoResponse actualizar(MedicoRequest request, Long id) {
         Medico medico = obtenerMedicoPorEstado(id, EstadoRegistro.ACTIVO);
-        // TODO
+        validarMedicoSinCitasActivas(id);
         // Validar que el médico no tenga citas
         // CONFIRMADAS o EN_CURSO.
         validarDuplicadosActualizar(id, request);
@@ -85,13 +89,14 @@ public class MedicoServiceImpl implements MedicoService {
     // (PUT /{idMedico}/disponibilidad/{idDisponibilidad})
     public void actualizarDisponibilidadMedico(Long idMedico, Long idDisponibilidad) {
         Medico medico = obtenerMedicoPorEstado(idMedico, EstadoRegistro.ACTIVO);
-
-        DisponibilidadMedico nuevaDisponibilidad = DisponibilidadMedico.obtenerDisponibilidadPorCodigo(idDisponibilidad);
-        DisponibilidadMedico anteriorDisponibilidad = medico.getDisponibilidadMedico();
-        // TODO:
         // Validar que el médico no tenga citas
         // CONFIRMADAS o EN_CURSO antes de permitir
         // el cambio manual de disponibilidad.
+        //validarMedicoSinCitasActivas(idMedico);
+        DisponibilidadMedico nuevaDisponibilidad = DisponibilidadMedico.obtenerDisponibilidadPorCodigo(idDisponibilidad);
+        DisponibilidadMedico anteriorDisponibilidad = medico.getDisponibilidadMedico();
+
+
 
         medico.actualizarDisponibilidad(nuevaDisponibilidad);
 
@@ -103,12 +108,23 @@ public class MedicoServiceImpl implements MedicoService {
     @Override // ElLIMINACIÓN LÓGICA MEDICO (DELETE /{id})
     public void eliminar(Long id) {
         Medico medico = obtenerMedicoPorEstado(id, EstadoRegistro.ACTIVO);
-        // TODO
+        validarMedicoSinCitasActivas(id);
         // Validar que el médico no tenga citas
         // CONFIRMADAS o EN_CURSO.
         medico.eliminar();
         medicoRepository.save(medico);
         log.info("Médico eliminado correctamente. Id={}", id);
+    }
+
+    private void validarMedicoSinCitasActivas(Long idMedico){
+
+        log.info("Validando que el médico {} no tenga citas confirmadas o en curso", idMedico);
+
+        if(Boolean.TRUE.equals(citaCliente.tieneCitasActivasMedico(idMedico))){
+            throw new IllegalStateException(
+                    "El médico tiene citas confirmadas o en curso."
+            );
+        }
     }
 
 

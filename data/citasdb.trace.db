@@ -1,0 +1,16 @@
+2026-07-23 11:29:53.291818-06:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "TRUNCATE [*]CITAS"; se esperaba "TABLE"
+Syntax error in SQL statement "TRUNCATE [*]CITAS"; expected "TABLE"; SQL statement:
+TRUNCATE CITAS [42001-240]
+2026-07-23 21:44:47.254591-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "PACIENTES" no encontrada
+Table "PACIENTES" not found; SQL statement:
+SELECT * FROM PACIENTES [42102-240]
+2026-07-23 21:44:52.793630-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "PACIENTES" no encontrada
+Table "PACIENTES" not found; SQL statement:
+SELECT * FROM PACIENTES [42102-240]
+2026-07-23 21:45:05.633837-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "PACIENTE" no encontrada
+Table "PACIENTE" not found; SQL statement:
+SELECT * FROM PACIENTE [42102-240]

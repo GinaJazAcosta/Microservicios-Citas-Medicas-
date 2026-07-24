@@ -1,5 +1,6 @@
 package com.gina.pacientes.service;
 
+import com.gina.common.clients.CitaCliente;
 import com.gina.common.dto.paciente.PacienteRequest;
 import com.gina.common.dto.paciente.PacienteResponse;
 import com.gina.common.enums.EstadoRegistro;
@@ -22,6 +23,7 @@ public class PacienteServiceImpl implements PacienteService {
 
     private final PacienteRepository pacienteRepository;
     private final PacienteMapper pacienteMapper;
+    private final CitaCliente citaCliente;
 
     @Override //LISTAR PACIENTES ACTIVOS (GET /)
     @Transactional(readOnly = true)
@@ -62,7 +64,7 @@ public class PacienteServiceImpl implements PacienteService {
     @Override //ACTUALIZAR PACIENTE (PUT /{id})
     public PacienteResponse actualizar(PacienteRequest request, Long id) {
         Paciente paciente = obtenerPacientePorEstado(id, EstadoRegistro.ACTIVO);
-        // TODO
+        validarPacienteSinCitasActivas(id);
         // Validar que el paciente no tenga citas
         // CONFIRMADAS o EN_CURSO.
         validarDuplicadosActualizar(id, request);
@@ -81,7 +83,7 @@ public class PacienteServiceImpl implements PacienteService {
     @Override // ElLIMINACIÓN LÓGICA PACIENTE (DELETE /{id})
     public void eliminar(Long id) {
         Paciente paciente = obtenerPacientePorEstado(id, EstadoRegistro.ACTIVO);
-        // TODO
+        validarPacienteSinCitasActivas(id);
         // Validar que el paciente no tenga citas
         // CONFIRMADAS o EN_CURSO.
         paciente.eliminar();
@@ -119,6 +121,18 @@ public class PacienteServiceImpl implements PacienteService {
             throw new IllegalArgumentException("Ya existe un paciente activo con ese correo");
         if (pacienteRepository.existsByTelefonoIgnoreCaseAndEstadoRegistroAndIdNot(request.telefono().trim(), EstadoRegistro.ACTIVO, id))
             throw new IllegalArgumentException("Ya existe un paciente activo con ese teléfono");
+    }
+
+    private void validarPacienteSinCitasActivas(Long idPaciente){
+
+        log.info("Validando que el paciente {} no tenga citas activas", idPaciente);
+
+        if(Boolean.TRUE.equals(citaCliente.tieneCitasActivasPaciente(idPaciente))){
+            throw new IllegalStateException(
+                    "El paciente tiene citas confirmadas o en curso y no puede modificarse."
+            );
+        }
+
     }
 
 }
