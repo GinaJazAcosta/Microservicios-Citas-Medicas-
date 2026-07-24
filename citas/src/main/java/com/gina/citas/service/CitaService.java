@@ -6,4 +6,7 @@ import com.gina.common.service.CrudService;
 
 public interface CitaService  extends CrudService<CitaRequest, CitaResponse> {
     void actualizarEstadoCita(Long idCita, Long idEstadoCita);
+
+    Boolean tieneCitasActivasPaciente(Long idPaciente);
+    Boolean tieneCitasActivasMedico(Long idMedico);
 }
